@@ -1,4 +1,4 @@
-# Criando um ambiente de Desenvolvimento EMP com Containers Bitnami
+# Ambiente de Desenvolvimento LEMP com Containers Bitnami
 
 ---
 
