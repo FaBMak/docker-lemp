@@ -1,0 +1,54 @@
+version: "2"
+
+services:
+  phpfpm:
+    container_name: php-container
+    hostname: php
+    tty: true # Enables debugging capabilities when attached to this container.
+    image: "bitnami/php-fpm:latest"
+    ports:
+      - 9000:9000
+    volumes:
+      - ./app:/app
+
+  nginx:
+    container_name: nginx-container
+    hostname: nginx
+    image: "bitnami/nginx:latest"
+    depends_on:
+      - phpfpm
+    ports:
+      - "80:8080"
+      - "443:8443"
+    volumes:
+      - ./config/app.conf:/opt/bitnami/nginx/conf/server_blocks/app.conf
+      - ./app:/app
+
+  mariadb:
+    container_name: mariadb-container
+    hostname: mariadb
+    image: "bitnami/mariadb:latest"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "mariadb_data:/bitnami/mariadb"
+    environment:
+      - MARIADB_ROOT_PASSWORD=bitnami
+
+  phpmyadmin:
+    container_name: phpmyadmin-container
+    hostname: phpmyadmin
+    image: "bitnami/phpmyadmin:5"
+    ports:
+      - "8080:80"
+      - "8443:443"
+    depends_on:
+      - mariadb
+    volumes:
+      - "phpmyadmin_data:/bitnami"
+
+volumes:
+  mariadb_data:
+    driver: local
+  phpmyadmin_data:
+    driver: local
